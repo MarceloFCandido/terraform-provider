@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 package provider
 
 import (
@@ -14,28 +11,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// Ensure GithubGistProvider satisfies various provider interfaces.
-var _ provider.Provider = &GithubGistProvider{}
+var _ provider.Provider = &OpenAIProvider{}
 
-// GithubGistProvider defines the provider implementation.
-type GithubGistProvider struct {
-	// version is set to the provider version on release, "dev" when the
-	// provider is built and ran locally, and "test" when running acceptance
-	// testing.
+type OpenAIProvider struct {
 	version string
 }
 
-// GithubGistProviderModel describes the provider data model.
-type GithubGistProviderModel struct {
+type OpenAIProviderModel struct {
 	Endpoint types.String `tfsdk:"endpoint"`
 }
 
-func (p *GithubGistProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+func (p *OpenAIProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "github"
 	resp.Version = p.version
 }
 
-func (p *GithubGistProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *OpenAIProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
@@ -46,8 +37,8 @@ func (p *GithubGistProvider) Schema(ctx context.Context, req provider.SchemaRequ
 	}
 }
 
-func (p *GithubGistProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data GithubGistProviderModel
+func (p *OpenAIProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data OpenAIProviderModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
@@ -55,26 +46,22 @@ func (p *GithubGistProvider) Configure(ctx context.Context, req provider.Configu
 		return
 	}
 
-	// Configuration values are now available.
-	// if data.Endpoint.IsNull() { /* ... */ }
-
-	// Example client configuration for data sources and resources
 	client := http.DefaultClient
 	resp.DataSourceData = client
 	resp.ResourceData = client
 }
 
-func (p *GithubGistProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *OpenAIProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{}
 }
 
-func (p *GithubGistProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *OpenAIProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{}
 }
 
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &GithubGistProvider{
+		return &OpenAIProvider{
 			version: version,
 		}
 	}
